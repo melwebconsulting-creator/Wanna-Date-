@@ -1,0 +1,6 @@
+{
+  "name": "Can We Go On A Date? 💗",
+  "description": "An interactive, romantic Valentine's Day invitation with a runaway No button, date planner, love quiz, secret letter, and private owner inbox.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

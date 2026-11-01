@@ -1,0 +1,880 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Can We Go On A Date? 💗 – Valentine's Day Invitation</title>
+    <meta name="description" content="An interactive romantic Valentine's Day invitation with a runaway No button, date planner, love quiz, secret letter, and private response inbox." />
+    <meta property="og:title" content="Can We Go On A Date? 💗" />
+    <meta property="og:description" content="I have a little question for you... Open your romantic Valentine's invitation!" />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#f43f6e" />
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fredoka:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Supabase JS CDN (Official) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <!-- Background Canvas for Floating Hearts & Confetti -->
+    <canvas id="hearts-canvas"></canvas>
+    <canvas id="confetti-canvas"></canvas>
+
+    <div class="app-container">
+      <!-- Top Navigation & Utility Header -->
+      <header class="app-header">
+        <div class="brand-badge">
+          <span class="brand-icon">💗</span>
+          <span id="header-brand-title">Can We Go On A Date?</span>
+        </div>
+        <div class="header-actions">
+          <button id="btn-toggle-music" class="btn-icon-soft" title="Toggle romantic background music" aria-label="Toggle background music">
+            <span id="music-icon">🎵</span>
+            <span id="music-label">Music: Off</span>
+          </button>
+          <button id="btn-open-admin" class="btn-icon-soft" title="Owner Admin Login & Inbox" aria-label="Owner dashboard">
+            <span>👑</span>
+            <span>Owner</span>
+            <span id="unread-counter-badge" class="choice-check" style="display:none;position:static;width:18px;height:18px;font-size:0.7rem;">0</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Stepper Indicator -->
+      <nav class="stepper-nav" aria-label="Invitation Steps">
+        <div class="step-indicator active" data-step="1">
+          <div class="step-dot">1</div>
+          <span>The Question</span>
+        </div>
+        <div class="step-indicator" data-step="2">
+          <div class="step-dot">2</div>
+          <span>Date Planner</span>
+        </div>
+        <div class="step-indicator" data-step="3">
+          <div class="step-dot">3</div>
+          <span>Love Quiz</span>
+        </div>
+        <div class="step-indicator" data-step="4">
+          <div class="step-dot">4</div>
+          <span>Secret Letter</span>
+        </div>
+        <div class="step-indicator" data-step="5">
+          <div class="step-dot">5</div>
+          <span>Confirm & Send</span>
+        </div>
+      </nav>
+
+      <!-- ============================================== -->
+      <!-- PAGE 1: MAIN INVITATION & RUNAWAY NO BUTTON    -->
+      <!-- ============================================== -->
+      <section id="page-1" class="page-section active">
+        <div class="card-romantic invitation-wrapper">
+          <div class="badge-tag">
+            <span>💌</span>
+            <span>Valentine's Special Delivery</span>
+          </div>
+          
+          <div class="greeting-text" id="display-greeting">HEY YOU! 💗</div>
+          <div style="font-size: 1.15rem; color: var(--pink-500); font-weight: 600; margin-bottom: 8px;">
+            I have a little question for you...
+          </div>
+          
+          <h1 class="main-title" id="display-main-heading">CAN WE GO ON A DATE?</h1>
+          
+          <p class="subtitle-text" id="display-main-subtitle">
+            I've been wanting to ask you something special. Sooo... 🥺
+          </p>
+
+          <!-- Teddy Bear SVG Animation -->
+          <div class="teddy-container" id="teddy-hero" title="Give teddy a pat!">
+            <svg class="teddy-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Left Ear -->
+              <circle cx="55" cy="55" r="28" fill="#d97706" />
+              <circle cx="55" cy="55" r="16" fill="#fde68a" />
+              <!-- Right Ear -->
+              <circle cx="145" cy="55" r="28" fill="#d97706" />
+              <circle cx="145" cy="55" r="16" fill="#fde68a" />
+              <!-- Head -->
+              <circle cx="100" cy="85" r="50" fill="#f59e0b" />
+              <!-- Snout -->
+              <ellipse cx="100" cy="98" rx="22" ry="16" fill="#fef3c7" />
+              <ellipse cx="100" cy="92" rx="9" ry="6" fill="#78350f" />
+              <path d="M 100 98 Q 100 106 94 107" stroke="#78350f" stroke-width="2.5" stroke-linecap="round" />
+              <path d="M 100 98 Q 100 106 106 107" stroke="#78350f" stroke-width="2.5" stroke-linecap="round" />
+              <!-- Eyes with sparkles -->
+              <circle cx="82" cy="78" r="6" fill="#451a03" />
+              <circle cx="80" cy="76" r="2" fill="white" class="blush-sparkle" />
+              <circle cx="118" cy="78" r="6" fill="#451a03" />
+              <circle cx="116" cy="76" r="2" fill="white" class="blush-sparkle" />
+              <!-- Blushing cheeks -->
+              <ellipse cx="74" cy="94" rx="8" ry="4" fill="#fb7185" opacity="0.65" />
+              <ellipse cx="126" cy="94" rx="8" ry="4" fill="#fb7185" opacity="0.65" />
+              <!-- Body -->
+              <ellipse cx="100" cy="148" rx="44" ry="40" fill="#f59e0b" />
+              <!-- Paws -->
+              <ellipse cx="50" cy="148" rx="14" ry="18" fill="#d97706" />
+              <ellipse cx="150" cy="148" rx="14" ry="18" fill="#d97706" />
+              <!-- Feet -->
+              <ellipse cx="70" cy="184" rx="18" ry="12" fill="#d97706" />
+              <ellipse cx="130" cy="184" rx="18" ry="12" fill="#d97706" />
+              <ellipse cx="70" cy="184" rx="10" ry="7" fill="#fde68a" />
+              <ellipse cx="130" cy="184" rx="10" ry="7" fill="#fde68a" />
+              <!-- Beating Heart held by paws -->
+              <g class="heart-beating">
+                <path d="M 100 126 C 100 114 84 105 73 118 C 60 133 80 152 100 166 C 120 152 140 133 127 118 C 116 105 100 114 100 126 Z" fill="#e11d48" />
+                <path d="M 88 122 Q 94 116 100 122" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.6" />
+              </g>
+            </svg>
+          </div>
+
+          <!-- Buttons Stage (YES & RUNAWAY NO) -->
+          <div class="decision-stage" id="decision-arena">
+            <!-- YES BUTTON -->
+            <button id="btn-yes-action" class="btn-yes">
+              <span class="sparkle-icon">✨</span>
+              <span id="display-btn-yes-text">YES! 💗</span>
+            </button>
+
+            <!-- NO BUTTON WRAPPER -->
+            <div class="btn-no-wrapper" id="no-container">
+              <div class="runaway-speech-bubble" id="runaway-bubble">Oops! You missed me! 🏃</div>
+              <button id="btn-no-action" class="btn-no">
+                <span>😭</span>
+                <span id="display-btn-no-text">NO</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Escape Counter & Plea message -->
+          <div class="escape-counter" id="escape-counter-text"></div>
+          <div class="plea-banner" id="plea-banner">
+            Okay fineeee! I'll stop running... BUT WILL YOU RECONSIDER? 🥺💗
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- YES CELEBRATION MODAL OVERLAY                  -->
+      <!-- ============================================== -->
+      <div id="celebration-overlay" class="celebration-modal" role="dialog" aria-modal="true">
+        <div class="celebration-box">
+          <div class="celebration-bear">
+            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="28" cy="28" r="16" fill="#f59e0b" />
+              <circle cx="72" cy="28" r="16" fill="#f59e0b" />
+              <circle cx="50" cy="50" r="32" fill="#fbbf24" />
+              <circle cx="40" cy="45" r="4" fill="#78350f" />
+              <circle cx="60" cy="45" r="4" fill="#78350f" />
+              <ellipse cx="50" cy="55" rx="14" ry="10" fill="#fef3c7" />
+              <circle cx="50" cy="52" r="4" fill="#78350f" />
+              <path d="M 45 58 Q 50 64 55 58" stroke="#78350f" stroke-width="2" fill="none" stroke-linecap="round" />
+              <ellipse cx="32" cy="52" rx="5" ry="3" fill="#fb7185" opacity="0.7" />
+              <ellipse cx="68" cy="52" rx="5" ry="3" fill="#fb7185" opacity="0.7" />
+            </svg>
+          </div>
+          <h2 class="celebration-title" id="display-celeb-title">YAAAAAYYYYY! 💘</h2>
+          <div class="celebration-subtitle">IT'S A DATE!!!</div>
+          <p class="celebration-text" id="display-celeb-text">
+            I'M SO HAPPY YOU SAID YES! 🥹💕<br>
+            Now comes the super fun part... let's design our dream date together!
+          </p>
+          <button id="btn-proceed-planner" class="btn-primary" style="font-size: 1.25rem;">
+            <span>LET'S PLAN OUR DATE! 🌸</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- PAGE 2: LET'S PLAN OUR DATE                     -->
+      <!-- ============================================== -->
+      <section id="page-2" class="page-section">
+        <div class="card-romantic">
+          <div class="section-header">
+            <div class="badge-tag"><span>Step 2 of 5</span> <span>🎨 Date Designer</span></div>
+            <h2 class="section-title">LET'S PLAN OUR DATE! 💗</h2>
+            <p class="section-desc">Pick what you would love most, or customize any of your favorites!</p>
+          </div>
+
+          <!-- Visitor Name / Identity -->
+          <div class="input-row">
+            <div class="input-box">
+              <label for="visitor-name"><span>🧸</span> Your Name or Cute Nickname <span style="color:var(--pink-500)">*</span></label>
+              <input type="text" id="visitor-name" class="input-styled" placeholder="e.g. Cutie Pie, Sarah, Alex..." maxlength="60" required />
+            </div>
+            <div class="input-box">
+              <label for="preferred-date-input"><span>📅</span> When should we go? <span style="color:var(--pink-500)">*</span></label>
+              <input type="date" id="preferred-date-input" class="input-styled" required />
+            </div>
+          </div>
+
+          <!-- Activity Selection -->
+          <div class="form-group-block">
+            <div class="group-label">
+              <span>🎡</span> <span>Choose Our Date Activity:</span>
+            </div>
+            <div class="choice-grid" id="grid-activities">
+              <!-- Dynamically populated or default options -->
+            </div>
+          </div>
+
+          <!-- Food Selection -->
+          <div class="form-group-block">
+            <div class="group-label">
+              <span>🍕</span> <span>What are we eating?</span>
+            </div>
+            <div class="choice-grid" id="grid-foods">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Drinks Selection -->
+          <div class="form-group-block">
+            <div class="group-label">
+              <span>🧋</span> <span>What are we sipping on?</span>
+            </div>
+            <div class="choice-grid" id="grid-drinks">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Outfit Selection -->
+          <div class="form-group-block">
+            <div class="group-label">
+              <span>👗</span> <span>Outfit Vibe:</span>
+            </div>
+            <div class="choice-grid" id="grid-outfits">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Sweet Message -->
+          <div class="form-group-block">
+            <div class="group-label">
+              <span>💌</span> <span>A sweet message for me (optional):</span>
+            </div>
+            <textarea id="personal-message-input" class="textarea-styled" placeholder="Write something sweet here... 💌"></textarea>
+          </div>
+
+          <!-- Nav actions -->
+          <div class="action-buttons-row">
+            <button class="btn-secondary btn-step-back" data-target="1">
+              <span>← Back</span>
+            </button>
+            <button id="btn-planner-continue" class="btn-primary">
+              <span>CONTINUE TO LOVE QUIZ 💗 →</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- PAGE 3: LOVE QUIZ                              -->
+      <!-- ============================================== -->
+      <section id="page-3" class="page-section">
+        <div class="card-romantic quiz-container">
+          <div class="section-header">
+            <div class="badge-tag"><span>Step 3 of 5</span> <span>💘 Romantic Compatibility</span></div>
+            <h2 class="section-title">THE LOVE QUIZ 🏹</h2>
+            <p class="section-desc">Answer 5 little questions to calculate our cute date chemistry!</p>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="quiz-progress-track">
+            <div class="quiz-progress-fill" id="quiz-progress-bar" style="width: 20%;">
+              <span class="quiz-progress-heart">💗</span>
+            </div>
+          </div>
+
+          <!-- Active Question Card -->
+          <div class="quiz-card" id="quiz-question-card">
+            <div class="quiz-counter" id="quiz-counter-display">Question 1 of 5</div>
+            <h3 class="quiz-question" id="quiz-question-text">Loading question...</h3>
+            <div class="quiz-options" id="quiz-options-list">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <!-- Quiz Result Display -->
+          <div class="quiz-result-card" id="quiz-result-box">
+            <div class="score-badge" id="quiz-score-badge">100% 💘</div>
+            <h3 class="quiz-result-title">A Match Written in the Stars!</h3>
+            <p class="quiz-result-desc" id="quiz-result-summary">
+              Our tastes, humor, and romantic vibes align so effortlessly! I literally can't wait for our date.
+            </p>
+            <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+              <button id="btn-quiz-retake" class="btn-secondary">
+                <span>🔄 Retake Quiz</span>
+              </button>
+              <button id="btn-quiz-continue" class="btn-primary">
+                <span>CONTINUE TO SECRET LETTER 💌 →</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Nav Back -->
+          <div class="action-buttons-row" id="quiz-nav-row" style="margin-top: 10px;">
+            <button class="btn-secondary btn-step-back" data-target="2">
+              <span>← Back to Planner</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- PAGE 4: SECRET LOVE LETTER                     -->
+      <!-- ============================================== -->
+      <section id="page-4" class="page-section">
+        <div class="card-romantic letter-stage">
+          <div class="section-header">
+            <div class="badge-tag"><span>Step 4 of 5</span> <span>📜 Sealed with Love</span></div>
+            <h2 class="section-title">SECRET LOVE LETTER 💌</h2>
+            <p class="section-desc">Tap the wax heart seal to open your private romantic letter!</p>
+          </div>
+
+          <!-- 3D Envelope Component -->
+          <div class="envelope-wrapper" id="envelope-trigger" title="Tap to open letter!">
+            <div class="envelope" id="envelope-object">
+              <div class="envelope-flap"></div>
+              <div class="wax-seal">💗</div>
+              <div class="envelope-pocket"></div>
+            </div>
+          </div>
+
+          <!-- Unfolded Paper Letter Sheet -->
+          <div class="unfolded-letter" id="unfolded-letter-view">
+            <div class="letter-to" id="display-letter-to">To: My Favorite Person 💗</div>
+            <div class="letter-body" id="display-letter-body">
+              Ever since I met you, ordinary days became so much brighter and full of laughter.
+
+              I've been looking forward to spending Valentine's Day with you, enjoying yummy food, sharing silly stories, and creating memories that make us smile for a long, long time.
+
+              Thank you for being so wonderful, kind, and uniquely you.
+            </div>
+            <div class="letter-sign" id="display-letter-from">With all my love,<br><span style="font-size:1.6rem">Your Secret Admirer ✨</span></div>
+          </div>
+
+          <!-- Action buttons -->
+          <div class="action-buttons-row">
+            <button class="btn-secondary btn-step-back" data-target="3">
+              <span>← Back to Quiz</span>
+            </button>
+            <button id="btn-letter-continue" class="btn-primary">
+              <span>VIEW DATE SUMMARY & CONFIRM 🌸 →</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- PAGE 5: FINAL CONFIRMATION & SUBMISSION        -->
+      <!-- ============================================== -->
+      <section id="page-5" class="page-section">
+        <div class="card-romantic">
+          <div class="section-header">
+            <div class="badge-tag"><span>Step 5 of 5</span> <span>🎫 Date Pass Confirmation</span></div>
+            <h2 class="section-title">OUR OFFICIAL DATE TICKET 💗</h2>
+            <p class="section-desc">Check out your customized Valentine's itinerary before sealing it!</p>
+          </div>
+
+          <!-- Ticket Box -->
+          <div class="ticket-wrapper" id="printable-ticket">
+            <div class="ticket-header">
+              <div class="ticket-title">VALENTINE'S DATE PASS 💌</div>
+              <div class="ticket-badge" id="summary-response-badge">STATUS: CONFIRMED YES! 💘</div>
+            </div>
+            <div class="ticket-body">
+              <div class="ticket-grid">
+                <div class="ticket-item">
+                  <div class="ticket-label"><span>👤</span> Special Guest</div>
+                  <div class="ticket-val" id="summary-visitor-name">—</div>
+                </div>
+                <div class="ticket-item">
+                  <div class="ticket-label"><span>📅</span> Chosen Date</div>
+                  <div class="ticket-val" id="summary-preferred-date">—</div>
+                </div>
+                <div class="ticket-item">
+                  <div class="ticket-label"><span>🎡</span> Date Activity</div>
+                  <div class="ticket-val" id="summary-activity">—</div>
+                </div>
+                <div class="ticket-item">
+                  <div class="ticket-label"><span>🍽️</span> Food Preference</div>
+                  <div class="ticket-val" id="summary-food">—</div>
+                </div>
+                <div class="ticket-item">
+                  <div class="ticket-label"><span>🧃</span> Drink Choice</div>
+                  <div class="ticket-val" id="summary-drink">—</div>
+                </div>
+                <div class="ticket-item">
+                  <div class="ticket-label"><span>👗</span> Outfit Style</div>
+                  <div class="ticket-val" id="summary-outfit">—</div>
+                </div>
+              </div>
+
+              <div class="ticket-message-box">
+                <div class="ticket-label" style="margin-bottom:8px;"><span>💌</span> Sweet Personal Note:</div>
+                <div class="ticket-message-val" id="summary-personal-message">No sweet note added yet.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Privacy & Consent Notice -->
+          <div class="privacy-notice">
+            <span>🔒</span>
+            <span>By submitting, you agree to share your answers with the website owner.</span>
+          </div>
+
+          <!-- Submission Feedback / Error banner -->
+          <div id="submission-error-banner" style="display:none; background:#fee2e2; border:1px solid #f87171; color:#991b1b; padding:12px 18px; border-radius:var(--radius-md); text-align:center; margin-bottom:16px; font-weight:600;">
+          </div>
+
+          <!-- Actions -->
+          <div class="action-buttons-row" id="submission-action-buttons" style="justify-content:center;">
+            <button class="btn-secondary btn-step-back" data-target="4">
+              <span>← Edit Answers</span>
+            </button>
+            <button id="btn-submit-final-response" class="btn-primary" style="font-size:1.3rem; padding:16px 42px;">
+              <span id="submit-btn-spinner" style="display:none;">⏳</span>
+              <span id="submit-btn-text">SUBMIT MY RESPONSE 💌</span>
+            </button>
+          </div>
+
+          <!-- Confirmed Success View -->
+          <div class="success-card" id="submission-success-card">
+            <div class="success-icon">🎉💗💐</div>
+            <h3 class="success-heading">YOUR RESPONSE HAS BEEN SENT! 💗</h3>
+            <p class="success-sub">
+              Thank you for making this Valentine's Day extra special!<br>
+              The website owner has received your sweet invitation response in their private inbox.
+            </p>
+            <div style="display:flex; justify-content:center; gap:14px; flex-wrap:wrap;">
+              <button id="btn-copy-share-link" class="btn-primary">
+                <span>🔗 Copy Share Link</span>
+              </button>
+              <button id="btn-print-ticket" class="btn-secondary">
+                <span>🖨️ Print / Save Ticket</span>
+              </button>
+              <button id="btn-restart-experience" class="btn-secondary">
+                <span>🔄 Restart Experience</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="app-footer">
+        <div>Handcrafted with 💗 for an unforgettable Valentine's Day.</div>
+        <div class="footer-links">
+          <button id="footer-btn-admin" class="footer-btn">👑 Owner Dashboard & Inbox</button>
+          <span>•</span>
+          <button id="footer-btn-guide" class="footer-btn">⚙️ Supabase Setup & GitHub Pages Guide</button>
+        </div>
+      </footer>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- OWNER ADMIN DASHBOARD MODAL                    -->
+    <!-- ============================================== -->
+    <div id="modal-admin" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="admin-dialog-title">
+      <div class="admin-window">
+        <div class="admin-header">
+          <div class="admin-title" id="admin-dialog-title">
+            <span>👑</span>
+            <span>Owner Dashboard & Response Inbox</span>
+          </div>
+          <button id="btn-close-admin-modal" class="btn-close-modal" aria-label="Close dashboard">✕</button>
+        </div>
+
+        <div class="admin-body">
+          <!-- Auth Gate for Owner (Supabase Auth) -->
+          <div id="admin-auth-gate" style="display:none; max-width:440px; margin:20px auto; text-align:center;">
+            <div style="font-size:2.5rem; margin-bottom:10px;">🔐</div>
+            <h3 style="font-family:var(--font-display); font-size:1.6rem; color:var(--pink-600); margin-bottom:8px;">
+              Owner Login
+            </h3>
+            <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:20px;">
+              Log in with your Supabase account to access your private response inbox and customize your website.
+            </p>
+
+            <form id="owner-login-form" style="display:flex; flex-direction:column; gap:14px;">
+              <input type="email" id="owner-email" class="input-styled" placeholder="Your Email Address" required />
+              <input type="password" id="owner-password" class="input-styled" placeholder="Your Password" required />
+              
+              <div id="auth-error-msg" style="display:none; color:#dc2626; font-size:0.85rem; font-weight:600;"></div>
+
+              <div style="display:flex; gap:10px; margin-top:8px;">
+                <button type="submit" id="btn-owner-signin" class="btn-primary" style="flex:1;">
+                  <span>Log In</span>
+                </button>
+                <button type="button" id="btn-owner-signup" class="btn-secondary" style="flex:1;">
+                  <span>Create Account</span>
+                </button>
+              </div>
+
+              <!-- Quick Local Mode / Demo switch if Supabase is being set up -->
+              <div style="margin-top:16px; padding-top:14px; border-top:1px dashed var(--pink-200);">
+                <button type="button" id="btn-test-preview-owner" class="btn-icon-soft" style="margin:0 auto;">
+                  <span>⚡ Open in Direct Access Mode</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Authenticated Dashboard Content -->
+          <div id="admin-dashboard-view">
+            <!-- Navigation Tabs -->
+            <div class="admin-nav-tabs">
+              <button class="tab-btn active" data-tab="tab-inbox">
+                <span>📬</span> <span>Inbox & Responses</span>
+                <span id="tab-inbox-badge" class="choice-check" style="display:none; position:static; width:18px; height:18px; font-size:0.7rem;">0</span>
+              </button>
+              <button class="tab-btn" data-tab="tab-overview">
+                <span>📊</span> <span>Analytics Overview</span>
+              </button>
+              <button class="tab-btn" data-tab="tab-customize">
+                <span>🎨</span> <span>Website Customizer</span>
+              </button>
+              <button class="tab-btn" data-tab="tab-database">
+                <span>⚙️</span> <span>Supabase & Deployment Guide</span>
+              </button>
+            </div>
+
+            <!-- TAB 1: PRIVATE INBOX -->
+            <div id="tab-inbox" class="tab-pane active">
+              <!-- Stats Row -->
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <div class="stat-icon">💌</div>
+                  <div class="stat-info">
+                    <div class="stat-num" id="stat-total-responses">0</div>
+                    <div class="stat-text">Total Responses</div>
+                  </div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-icon">💖</div>
+                  <div class="stat-info">
+                    <div class="stat-num" id="stat-yes-responses">0</div>
+                    <div class="stat-text">YES Responses</div>
+                  </div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-icon">🥺</div>
+                  <div class="stat-info">
+                    <div class="stat-num" id="stat-maybe-responses">0</div>
+                    <div class="stat-text">MAYBE Responses</div>
+                  </div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-icon">🔔</div>
+                  <div class="stat-info">
+                    <div class="stat-num" id="stat-unread-responses">0</div>
+                    <div class="stat-text">Unread Responses</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Inbox Toolbar -->
+              <div class="inbox-toolbar">
+                <div class="inbox-filters">
+                  <button class="filter-chip active" data-filter="all">All</button>
+                  <button class="filter-chip" data-filter="unread">Unread</button>
+                  <button class="filter-chip" data-filter="yes">YES 💖</button>
+                  <button class="filter-chip" data-filter="maybe">MAYBE 🥺</button>
+                </div>
+                <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                  <div class="search-input-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="inbox-search" placeholder="Search visitor name or message..." />
+                  </div>
+                  <button id="btn-export-csv" class="btn-icon-soft" title="Export responses to CSV">
+                    <span>📥 Export CSV</span>
+                  </button>
+                  <button id="btn-refresh-inbox" class="btn-icon-soft" title="Refresh inbox">
+                    <span>🔄 Refresh</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Inbox List Container -->
+              <div class="inbox-list" id="inbox-messages-container">
+                <!-- Dynamically injected response items -->
+              </div>
+
+              <!-- Response Full Detail Card (shows when an item is selected) -->
+              <div class="response-detail-view" id="inbox-detail-modal">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px;">
+                  <div>
+                    <h3 id="detail-name" style="font-family:var(--font-display); font-size:1.4rem; color:var(--pink-600);">Visitor Name</h3>
+                    <div id="detail-timestamp" style="font-size:0.85rem; color:var(--text-light);">Submitted on...</div>
+                  </div>
+                  <button id="btn-close-detail" class="btn-icon-soft">✕ Close Detail</button>
+                </div>
+                <div class="ticket-grid" id="detail-grid">
+                  <!-- Injected details -->
+                </div>
+                <div class="ticket-message-box" style="margin-top:14px;">
+                  <div class="ticket-label"><span>💌</span> Personal Sweet Note:</div>
+                  <div id="detail-note" class="ticket-message-val">—</div>
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+                  <button id="btn-detail-toggle-read" class="btn-icon-soft">Toggle Read/Unread</button>
+                  <button id="btn-detail-delete" class="btn-icon-soft" style="color:#dc2626; border-color:#fca5a5;">🗑️ Delete Response</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB 2: ANALYTICS OVERVIEW -->
+            <div id="tab-overview" class="tab-pane">
+              <h3 style="font-family:var(--font-display); font-size:1.3rem; margin-bottom:16px; color:var(--pink-600);">
+                Date Preferences Breakdown
+              </h3>
+              <div class="ticket-grid">
+                <div class="ticket-item">
+                  <div class="ticket-label"><span>🎡</span> Top Activity Pick</div>
+                  <div class="ticket-val" id="analytics-top-activity">—</div>
+                </div>
+                <div class="ticket-item">
+                  <div class="ticket-label"><span>🍕</span> Top Food Pick</div>
+                  <div class="ticket-val" id="analytics-top-food">—</div>
+                </div>
+                <div class="ticket-item">
+                  <div class="ticket-label"><span>🧋</span> Top Drink Pick</div>
+                  <div class="ticket-val" id="analytics-top-drink">—</div>
+                </div>
+                <div class="ticket-item">
+                  <div class="ticket-label"><span>👗</span> Top Outfit Style</div>
+                  <div class="ticket-val" id="analytics-top-outfit">—</div>
+                </div>
+              </div>
+
+              <div style="margin-top:24px; background:var(--pink-50); border:1.5px solid var(--pink-200); border-radius:var(--radius-md); padding:20px;">
+                <h4 style="font-family:var(--font-display); font-size:1.1rem; color:var(--pink-600); margin-bottom:10px;">
+                  Realtime Submissions Feed
+                </h4>
+                <div id="recent-activity-feed" style="font-size:0.95rem; color:var(--text-muted); display:flex; flex-direction:column; gap:8px;">
+                  <div>No activity logged yet. Share your link to receive responses!</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB 3: WEBSITE CUSTOMIZER -->
+            <div id="tab-customize" class="tab-pane">
+              <form id="customizer-form">
+                <h3 style="font-family:var(--font-display); font-size:1.3rem; margin-bottom:16px; color:var(--pink-600);">
+                  Personalize Your Valentine's Invitation
+                </h3>
+
+                <div class="input-row">
+                  <div class="input-box">
+                    <label>Recipient's Name (Crush / Partner)</label>
+                    <input type="text" id="cust-recipient-name" class="input-styled" placeholder="e.g. Maya, Alex, Sweetheart" />
+                  </div>
+                  <div class="input-box">
+                    <label>Sender's Name (You)</label>
+                    <input type="text" id="cust-sender-name" class="input-styled" placeholder="e.g. Your Secret Admirer, Liam" />
+                  </div>
+                </div>
+
+                <div class="input-row">
+                  <div class="input-box">
+                    <label>Main Invitation Heading</label>
+                    <input type="text" id="cust-heading" class="input-styled" value="CAN WE GO ON A DATE?" />
+                  </div>
+                  <div class="input-box">
+                    <label>Invitation Subtitle</label>
+                    <input type="text" id="cust-subtitle" class="input-styled" value="I've been wanting to ask you something special. Sooo... 🥺" />
+                  </div>
+                </div>
+
+                <div class="input-row">
+                  <div class="input-box">
+                    <label>YES Button Label</label>
+                    <input type="text" id="cust-btn-yes" class="input-styled" value="YES! 💗" />
+                  </div>
+                  <div class="input-box">
+                    <label>NO Button Label</label>
+                    <input type="text" id="cust-btn-no" class="input-styled" value="NO 😭" />
+                  </div>
+                </div>
+
+                <div class="input-box" style="margin-bottom:16px;">
+                  <label>Runaway NO Funny Messages (One per line)</label>
+                  <textarea id="cust-runaway-messages" class="textarea-styled" style="min-height:90px;"></textarea>
+                </div>
+
+                <div class="input-box" style="margin-bottom:16px;">
+                  <label>Secret Love Letter Content</label>
+                  <textarea id="cust-love-letter" class="textarea-styled" style="min-height:120px;"></textarea>
+                </div>
+
+                <div class="input-row">
+                  <div class="input-box">
+                    <label>Color Theme Palette</label>
+                    <select id="cust-color-theme" class="input-styled">
+                      <option value="pink">Classic Baby Pink & Rose (Default)</option>
+                      <option value="lavender">Lavender Romance</option>
+                      <option value="peach">Peachy Sweetheart</option>
+                      <option value="red">Ruby Passion Red</option>
+                    </select>
+                  </div>
+                  <div class="input-box">
+                    <label>Celebration Heading</label>
+                    <input type="text" id="cust-celeb-title" class="input-styled" value="YAAAAAYYYYY! 💘" />
+                  </div>
+                </div>
+
+                <div style="display:flex; gap:12px; margin-top:20px; justify-content:flex-end;">
+                  <button type="button" id="btn-preview-customization" class="btn-secondary">
+                    <span>👁️ Live Preview</span>
+                  </button>
+                  <button type="submit" id="btn-save-customization" class="btn-primary">
+                    <span>💾 Save & Publish Changes</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- TAB 4: DATABASE & DEPLOYMENT GUIDE -->
+            <div id="tab-database" class="tab-pane">
+              <h3 style="font-family:var(--font-display); font-size:1.3rem; margin-bottom:14px; color:var(--pink-600);">
+                Supabase Integration & GitHub Pages Deployment Guide
+              </h3>
+              
+              <!-- Supabase Credentials Input -->
+              <div style="background:var(--pink-50); border:1.5px solid var(--pink-200); border-radius:var(--radius-md); padding:20px; margin-bottom:20px;">
+                <h4 style="font-family:var(--font-display); font-size:1.1rem; color:var(--pink-600); margin-bottom:10px;">
+                  🔑 Supabase Project Configuration
+                </h4>
+                <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:14px;">
+                  Enter your Supabase URL and Publishable Anon Key below to connect your real database:
+                </p>
+                <div class="input-row">
+                  <div class="input-box">
+                    <label>Supabase Project URL</label>
+                    <input type="text" id="supabase-cfg-url" class="input-styled" placeholder="https://xyzcompany.supabase.co" />
+                  </div>
+                  <div class="input-box">
+                    <label>Supabase Anon (Publishable) Key</label>
+                    <input type="text" id="supabase-cfg-key" class="input-styled" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." />
+                  </div>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; flex-wrap:wrap; gap:8px;">
+                  <span id="supabase-status-indicator" style="font-weight:700; font-size:0.9rem; color:#15803d;">
+                    ● Local Buffer Ready (Enter Supabase credentials to sync with cloud)
+                  </span>
+                  <button type="button" id="btn-save-supabase-config" class="btn-primary">
+                    <span>Save Supabase Config</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- SQL Schema Snippet -->
+              <div style="margin-bottom:20px;">
+                <h4 style="font-family:var(--font-display); font-size:1.1rem; color:var(--text-main); margin-bottom:8px;">
+                  📋 Step 1: Run SQL in Supabase SQL Editor
+                </h4>
+                <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:10px;">
+                  Copy and paste this script directly into your Supabase SQL Editor to create the tables and secure Row Level Security (RLS) policies:
+                </p>
+                <div class="code-preview-box">
+                  <button class="btn-copy-code" id="btn-copy-sql">Copy SQL</button>
+                  <pre><code id="sql-schema-code">-- 1. Create responses table
+CREATE TABLE IF NOT EXISTS public.responses (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  visitor_name TEXT NOT NULL,
+  response_type TEXT NOT NULL DEFAULT 'YES',
+  date_activity TEXT,
+  food_choice TEXT,
+  drink_choice TEXT,
+  outfit_choice TEXT,
+  preferred_date TEXT,
+  personal_message TEXT,
+  quiz_summary TEXT,
+  is_read BOOLEAN DEFAULT false,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 2. Enable Row Level Security (RLS)
+ALTER TABLE public.responses ENABLE ROW LEVEL SECURITY;
+
+-- 3. Security Policy: Visitors can insert responses
+CREATE POLICY "Allow anonymous visitors to insert responses"
+  ON public.responses FOR INSERT
+  WITH CHECK (true);
+
+-- 4. Security Policy: Owner can read responses
+CREATE POLICY "Allow authenticated owner to read responses"
+  ON public.responses FOR SELECT
+  TO authenticated
+  USING (true);
+
+-- 5. Security Policy: Owner can update responses (e.g. mark as read)
+CREATE POLICY "Allow authenticated owner to update responses"
+  ON public.responses FOR UPDATE
+  TO authenticated
+  USING (true);
+
+-- 6. Security Policy: Owner can delete responses
+CREATE POLICY "Allow authenticated owner to delete responses"
+  ON public.responses FOR DELETE
+  TO authenticated
+  USING (true);
+
+-- 7. Create website_settings table for owner customizations
+CREATE TABLE IF NOT EXISTS public.website_settings (
+  id TEXT PRIMARY KEY DEFAULT 'default',
+  owner_id UUID REFERENCES auth.users(id),
+  website_title TEXT DEFAULT 'CAN WE GO ON A DATE? 💗',
+  invitation_heading TEXT DEFAULT 'CAN WE GO ON A DATE?',
+  invitation_subtitle TEXT DEFAULT 'I''ve been wanting to ask you something special. Sooo... 🥺',
+  recipient_name TEXT DEFAULT 'My Favorite Person',
+  sender_name TEXT DEFAULT 'Your Secret Admirer',
+  love_letter TEXT,
+  color_theme TEXT DEFAULT 'pink',
+  customization_data JSONB,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+ALTER TABLE public.website_settings ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow public to read website_settings"
+  ON public.website_settings FOR SELECT
+  USING (true);
+
+CREATE POLICY "Allow authenticated owner to modify website_settings"
+  ON public.website_settings FOR ALL
+  TO authenticated
+  USING (true)
+  WITH CHECK (true);</code></pre>
+                </div>
+              </div>
+
+              <!-- GitHub Pages Instructions -->
+              <div style="background:white; border:1px solid var(--pink-200); border-radius:var(--radius-md); padding:18px;">
+                <h4 style="font-family:var(--font-display); font-size:1.1rem; color:var(--text-main); margin-bottom:8px;">
+                  🚀 Step 2: Deploying to GitHub Pages
+                </h4>
+                <ol style="padding-left:20px; font-size:0.9rem; color:var(--text-muted); line-height:1.7;">
+                  <li>Upload <code>index.html</code>, <code>style.css</code>, and <code>script.js</code> to your GitHub repository root.</li>
+                  <li>In your GitHub repo, go to <strong>Settings</strong> → <strong>Pages</strong>.</li>
+                  <li>Under <strong>Source</strong>, select the <code>main</code> branch and folder <code>/ (root)</code>, then click <strong>Save</strong>.</li>
+                  <li>Your website will be live at <code>https://&lt;your-username&gt;.github.io/&lt;repo-name&gt;/</code>!</li>
+                  <li>Open the site, click <strong>Owner</strong> in the header, input your Supabase credentials once, and your invitation is fully live and connected!</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Logic Script (Vanilla JS) -->
+    <script type="module" src="./script.js"></script>
+  </body>
+</html>
